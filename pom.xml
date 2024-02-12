@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.pajonti</groupId>
+  <artifactId>GeoGenerator</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>GeoGenerator</name>
+
+  <properties>
+    <java.version>20</java.version>
+
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <!-- Dependencies versions -->
+    <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+    <json.version>20240205</json.version>
+    <log4j.version>2.22.1</log4j.version>
+  </properties>
+
+  <dependencies>
+
+    <!-- BUILD -->
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>${maven.compiler.plugin.version}</version>
+    </dependency>
+
+    <!-- RUN -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>${json.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+
+
+  </dependencies>
+</project>
