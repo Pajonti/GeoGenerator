@@ -1,11 +1,14 @@
 package fr.pajonti.geogenerator.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.pajonti.geogenerator.enums.Country;
 import fr.pajonti.geogenerator.enums.PolygonTypes;
+import fr.pajonti.geogenerator.serializers.GeoCitySerializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonSerialize(using = GeoCitySerializer.class)
 public class GeoCity {
     /**
      * Name of the city
@@ -25,7 +28,6 @@ public class GeoCity {
      */
     private PolygonTypes polygonType;
 
-    //TODO : See if there's a better format for this dataset
     /**
      * Map of coordinates representing the city location on a map
      */

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,16 +48,24 @@ public class FranceMapper implements CountryMapper {
             for(int indexGeometry = 0; indexGeometry < cityCoordinatesObject.getJSONArray("coordinates").length(); indexGeometry++){
                 Polygon area = new Polygon();
 
-                JSONArray coordinatesArray = cityCoordinatesObject.getJSONArray("coordinates").getJSONArray(indexGeometry).getJSONArray(0);
-
                 if(polygonType.equals(PolygonTypes.MULTIPLE_POLYGON)){
+                    JSONArray coordinatesArray = cityCoordinatesObject.getJSONArray("coordinates").getJSONArray(indexGeometry).getJSONArray(0);
+
                     for(int indexCoordinate = 0; indexCoordinate < coordinatesArray.length(); indexCoordinate++){
                         JSONArray coordinatesEntry = coordinatesArray.getJSONArray(indexCoordinate);
                         area.addCoordinates(new Coordinates(coordinatesEntry.getBigDecimal(0), coordinatesEntry.getBigDecimal(1)));
                     }
                 }
                 else{
-                    area.addCoordinates(new Coordinates(coordinatesArray.getBigDecimal(0), coordinatesArray.getBigDecimal(1)));
+                    JSONArray coordinatesArray = cityCoordinatesObject.getJSONArray("coordinates").getJSONArray(0);
+
+                    for(int indexCoordinate = 0; indexCoordinate < coordinatesArray.length(); indexCoordinate++){
+                        JSONArray coordinatesEntry = coordinatesArray.getJSONArray(indexCoordinate);
+                        BigDecimal bdX = coordinatesEntry.getBigDecimal(0);
+                        BigDecimal bdY = coordinatesEntry.getBigDecimal(1);
+
+                        area.addCoordinates(new Coordinates(bdX, bdY));
+                    }
                 }
 
                 city.addCoordinates(area);
@@ -66,7 +75,6 @@ public class FranceMapper implements CountryMapper {
             city.setPolygonType(polygonType);
 
             list.add(city);
-            logger.info("Reading city : " + city.getCountry() + "-" + city.getPostcode() + " : " + city.getName() + " with " + city.getCoordinates().size() + " polygons.");
         }
 
 
