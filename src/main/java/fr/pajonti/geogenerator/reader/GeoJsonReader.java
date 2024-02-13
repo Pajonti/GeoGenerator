@@ -2,8 +2,13 @@ package fr.pajonti.geogenerator.reader;
 
 import fr.pajonti.geogenerator.enums.Country;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,9 +22,26 @@ public class GeoJsonReader {
     }
 
     public static String readCountryFile(Country country){
-        try (InputStream is = GeoJsonReader.class.getClassLoader().getResourceAsStream("file.txt")) {
-            logger.info("File found");
-            return "todo";
+        String pathForGeoJSONFile = "geojsons/" + country.getCountryCode() + ".geojson";
+        ClassLoader classLoader = GeoJsonReader.class.getClassLoader();
+        try (InputStream is = classLoader.getResourceAsStream(pathForGeoJSONFile)) {
+            if(is == null){
+                logger.error("Unable to find file " + pathForGeoJSONFile);
+                return null;
+            }
+
+            InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+
+            BufferedReader reader = new BufferedReader(isr);
+
+            StringBuilder jsonBuilder = new StringBuilder();
+
+            String line;
+            while((line = reader.readLine()) != null){
+                jsonBuilder.append(line);
+            }
+
+            return jsonBuilder.toString();
         }
         catch (IOException ioe){
             logger.error("Unable to read GeoJSON file for country " + country);

@@ -3,9 +3,13 @@ package fr.pajonti.geogenerator.enums;
 public enum Country {
     FRANCE("fr");
 
-    public final String countryCode;
+    private final String countryCode;
 
     Country(String countryCode){
         this.countryCode = countryCode;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 }
