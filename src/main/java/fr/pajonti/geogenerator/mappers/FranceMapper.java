@@ -41,26 +41,34 @@ public class FranceMapper implements CountryMapper {
             city.setName(cityObject.getJSONObject("properties").getString("nom"));
             city.setPostcode(cityObject.getJSONObject("properties").getString("code"));
 
+            String polygonTypeString = cityCoordinatesObject.getString("type");
+            PolygonTypes polygonType = polygonTypeString.equals("MultiPolygon") ? PolygonTypes.MULTIPLE_POLYGON : PolygonTypes.SIMPLE_POLYGON;
+
             for(int indexGeometry = 0; indexGeometry < cityCoordinatesObject.getJSONArray("coordinates").length(); indexGeometry++){
                 Polygon area = new Polygon();
 
-                //TODO : FIX ISSUE : DIFFERENT BEHAVIOUR ON MULTIPLE_POLYGONS OR SIMPLE_POLYGON (EXTRA LAYER OF ARRAY)
                 JSONArray coordinatesArray = cityCoordinatesObject.getJSONArray("coordinates").getJSONArray(indexGeometry).getJSONArray(0);
 
-                for(int indexCoordinate = 0; indexCoordinate < coordinatesArray.length(); indexCoordinate++){
-                    JSONArray coordinatesEntry = coordinatesArray.getJSONArray(indexCoordinate);
-                    area.addCoordinates(new Coordinates(coordinatesEntry.getBigDecimal(0), coordinatesEntry.getBigDecimal(1)));
+                if(polygonType.equals(PolygonTypes.MULTIPLE_POLYGON)){
+                    for(int indexCoordinate = 0; indexCoordinate < coordinatesArray.length(); indexCoordinate++){
+                        JSONArray coordinatesEntry = coordinatesArray.getJSONArray(indexCoordinate);
+                        area.addCoordinates(new Coordinates(coordinatesEntry.getBigDecimal(0), coordinatesEntry.getBigDecimal(1)));
+                    }
+                }
+                else{
+                    area.addCoordinates(new Coordinates(coordinatesArray.getBigDecimal(0), coordinatesArray.getBigDecimal(1)));
                 }
 
                 city.addCoordinates(area);
             }
 
             city.setCountry(Country.FRANCE);
-            city.setPolygonType(city.getCoordinates().size() > 1 ? PolygonTypes.MULTIPLE_POLYGON : PolygonTypes.SIMPLE_POLYGON);
+            city.setPolygonType(polygonType);
 
             list.add(city);
-
+            logger.info("Reading city : " + city.getCountry() + "-" + city.getPostcode() + " : " + city.getName() + " with " + city.getCoordinates().size() + " polygons.");
         }
+
 
         return list;
     }
