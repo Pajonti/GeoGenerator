@@ -84,4 +84,15 @@ public class GeoCity {
     public void addCoordinates(Polygon polygon) {
         this.coordinates.add(polygon);
     }
+
+    @Override
+    public String toString() {
+        return "GeoCity{" +
+                "name='" + name + '\'' +
+                ", country=" + country +
+                ", postcode='" + postcode + '\'' +
+                ", polygonType=" + polygonType +
+                ", coordinates=" + coordinates +
+                '}';
+    }
 }
